@@ -1,6 +1,6 @@
 {
   "name": "@flash-gordon/instance-marker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Marks a web app instance with a colored frame and a label, so you never confuse one deployment with another",
   "keywords": [
     "instance",

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, test } from 'vitest'
 import { optionsFromScript, initFromScript } from '../src/global'
+import type { InstanceMarkerHandle } from '../src/index'
 
 const scriptWith = (attributes: Record<string, string>): HTMLScriptElement => {
   const script = document.createElement('script')
@@ -62,12 +63,17 @@ describe('script tag configuration', () => {
 })
 
 describe('auto-init', () => {
+  let mounted: InstanceMarkerHandle | undefined
+
   afterEach(() => {
+    // A mounted marker survives the DOM being wiped, so tear it down properly.
+    mounted?.destroy()
+    mounted = undefined
     document.body.innerHTML = ''
   })
 
   test('mounts the marker described by the script tag', () => {
-    initFromScript(scriptWith({ 'data-label': 'EU-WEST', 'data-color': '#e11d48' }))
+    mounted = initFromScript(scriptWith({ 'data-label': 'EU-WEST', 'data-color': '#e11d48' }))
 
     expect(shadow().querySelector('[data-badge]')!.textContent).toBe('EU-WEST')
   })

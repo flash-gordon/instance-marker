@@ -10,7 +10,9 @@ environment you are looking at.
 - Everything lives in a **shadow root**, so the host app's CSS cannot break it
   and it cannot break the host app
 - **No label, no marker** — the production instance stays untouched
-- Zero dependencies, ~2.3 kB gzipped, SSR-safe, hidden when printing
+- **Survives apps that rewrite the DOM** — if the host app replaces the body
+  while booting (Kibana does), the marker puts itself back
+- Zero dependencies, ~2.4 kB gzipped, SSR-safe, hidden when printing
 
 ## Install
 

@@ -185,6 +185,8 @@ export function mount(options: InstanceMarkerOptions = {}): InstanceMarkerHandle
   let baseTitle: string | null = null
   let appliedTitle: string | null = null
   let titleObserver: MutationObserver | null = null
+  let removalObserver: MutationObserver | null = null
+  let observedBody: HTMLElement | null = null
 
   const corner = (): Corner => chosenCorner ?? current.corner ?? DEFAULT_CORNER
 
@@ -194,7 +196,32 @@ export function mount(options: InstanceMarkerOptions = {}): InstanceMarkerHandle
     sync()
   }
 
+  const stopWatchingForRemoval = (): void => {
+    removalObserver?.disconnect()
+    removalObserver = null
+    observedBody = null
+  }
+
+  const watchForRemoval = (): void => {
+    // Some apps replace the whole body while booting (Kibana does), taking the
+    // marker with them. Put it back when that happens.
+    if (!removalObserver) {
+      removalObserver = new MutationObserver(() => {
+        if (destroyed || !host || !document.body) return
+        if (!host.isConnected) document.body.appendChild(host)
+        // A replaced <body> is a different node, so follow it.
+        if (observedBody !== document.body) watchForRemoval()
+      })
+    }
+
+    removalObserver.disconnect()
+    removalObserver.observe(document.documentElement, { childList: true })
+    removalObserver.observe(document.body, { childList: true })
+    observedBody = document.body
+  }
+
   const unmount = (): void => {
+    stopWatchingForRemoval()
     host?.remove()
     host = null
   }
@@ -257,6 +284,7 @@ export function mount(options: InstanceMarkerOptions = {}): InstanceMarkerHandle
       host.setAttribute('data-instance-marker', '')
       host.attachShadow({ mode: 'open' })
       document.body.appendChild(host)
+      watchForRemoval()
     }
     render(host.shadowRoot!, label, current, corner(), cycleCorner)
   }
