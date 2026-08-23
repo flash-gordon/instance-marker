@@ -1,0 +1,59 @@
+{
+  "name": "@flash-gordon/instance-marker",
+  "version": "0.1.0",
+  "description": "Marks a web app instance with a colored frame and a label, so you never confuse one deployment with another",
+  "keywords": [
+    "instance",
+    "environment",
+    "banner",
+    "frame",
+    "datacenter",
+    "staging"
+  ],
+  "license": "MIT",
+  "author": "Nikita Shilnikov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flash-gordon/instance-marker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/flash-gordon/instance-marker/issues"
+  },
+  "homepage": "https://github.com/flash-gordon/instance-marker#readme",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/instance-marker.global.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./global": "./dist/instance-marker.global.js",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^26.2.0",
+    "jsdom": "^24.1.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.0",
+    "vitest": "^1.6.0"
+  }
+}

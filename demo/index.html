@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Instance Marker demo</title>
+    <script src="../dist/instance-marker.global.js" data-label="EU-WEST" data-color="#e11d48"></script>
+    <style>
+      body { margin: 0; font: 14px/1.5 system-ui, sans-serif; color: #111827; }
+      header { padding: 16px 24px; border-bottom: 1px solid #e5e7eb; font-weight: 600; }
+      main { padding: 24px; max-width: 720px; }
+      fieldset { border: 1px solid #e5e7eb; border-radius: 6px; margin: 0 0 16px; padding: 12px 16px; }
+      legend { padding: 0 6px; color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+      label { display: inline-flex; align-items: center; gap: 8px; margin-right: 16px; }
+      p { color: #4b5563; }
+    </style>
+  </head>
+  <body>
+    <header>Fake app — scroll and click the badge to move it</header>
+    <main>
+      <fieldset>
+        <legend>Live options</legend>
+        <label>Label <input id="label" value="EU-WEST" /></label>
+        <label>Color <input id="color" type="color" value="#e11d48" /></label>
+        <label>Thickness <input id="thickness" type="number" value="5" min="0" max="40" style="width:60px" /></label>
+        <label>Title prefix <input id="title-prefix" type="checkbox" /></label>
+      </fieldset>
+      <p>The frame is fixed to the viewport edges and never touches this layout. Content scrolls under it.</p>
+      <p style="height: 150vh">Long content to prove the frame stays put while scrolling.</p>
+    </main>
+
+    <script>
+      const marker = window.InstanceMarker.mount({ label: 'EU-WEST', color: '#e11d48' })
+      const read = () => ({
+        label: document.getElementById('label').value,
+        color: document.getElementById('color').value,
+        thickness: Number(document.getElementById('thickness').value),
+        titlePrefix: document.getElementById('title-prefix').checked,
+      })
+      for (const id of ['label', 'color', 'thickness', 'title-prefix']) {
+        document.getElementById(id).addEventListener('input', () => marker.update(read()))
+      }
+    </script>
+  </body>
+</html>
